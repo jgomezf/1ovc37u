@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Note = require("./models/Note");
 const path = require('path');
 const md = require('marked');
+const {registerView} = require('./middlewares/pageView')
 
 const app = express();
 
@@ -14,12 +15,12 @@ app.set('views', 'views');
 app.use(express.urlencoded({ extended: true }));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
-app.get("/", async (req, res) => {
+app.get("/", registerView, async ( req, res) => {
   const notes = await Note.find();
   res.render("index",{ notes: notes } )
 });
 
-app.get("/notes/new", async (req, res) => {
+app.get("/notes/new", registerView, async (req, res) => {
   const notes = await Note.find();
   res.render("new", { notes: notes });
 });
@@ -40,13 +41,13 @@ app.post("/notes", async (req, res, next) => {
   res.redirect('/');
 });
 
-app.get("/notes/:id", async (req, res) => {
+app.get("/notes/:id", registerView, async (req, res) => {
   const notes = await Note.find();
   const note = await Note.findById(req.params.id);
   res.render("show", { notes: notes, currentNote: note, md: md });
 });
 
-app.get("/notes/:id/edit", async (req, res, next) => {
+app.get("/notes/:id/edit", registerView, async (req, res, next) => {
   const notes = await Note.find();
   const note = await Note.findById(req.params.id);
   res.render("edit", { notes: notes, currentNote: note });
