@@ -75,7 +75,7 @@ app.delete("/notes/:id", async (req, res) => {
   res.status(204).send({});
 });
 
-app.get("/analytics", async (req, res) => {
+app.get("/analytics", registerView, async (req, res) => {
   const visits = await PageView.aggregate([{"$group" : 
         {_id: "$path", count:{$sum:1}}}, 
         {$sort: {"count":-1}} ]);
