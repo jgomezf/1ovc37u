@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const Note = require("./models/Note");
 const path = require('path');
 const md = require('marked');
-const {registerView} = require('./middlewares/pageView')
+const {registerView} = require('./middlewares/pageView');
+const PageView = require("./models/PageView");
 
 const app = express();
 
@@ -72,6 +73,15 @@ app.patch("/notes/:id", async (req, res) => {
 app.delete("/notes/:id", async (req, res) => {
   await Note.deleteOne({ _id: req.params.id });
   res.status(204).send({});
+});
+
+app.get("/analytics", async (req, res) => {
+  const visits = await PageView.aggregate([{"$group" : 
+        {_id: "$path", count:{$sum:1}}}, 
+        {$sort: {"count":-1}} ]);
+
+  res.render("analytics", {visits: visits});
+
 });
 
 app.listen(3000, () => console.log("Listening on port 3000 ..."));

@@ -1,0 +1,18 @@
+html
+  head
+    title Analytics
+    link(rel="stylesheet" href="/assets/stylesheets/reset.css")
+    link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous")
+    link(rel="stylesheet" href="/assets/stylesheets/application.css")
+  body(class="body")  
+    h1 Analytics
+    table
+        thead
+            tr
+                th Path
+                th Visits
+        tbody
+            each visit in visits
+                tr
+                    td= visit._id
+                    td= visit.count
